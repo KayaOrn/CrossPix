@@ -219,7 +219,7 @@
             img.src = item.url;
             info.innerHTML = `
                 <div class="font-semibold text-base">${item.filename}</div>
-                <div class="text-gray-300 text-xs">ソース: ${item.siteSource || '本站'} | 日付: ${item.date} | タグ: ${item.tags.join(' ')}</div>
+                <div class="text-gray-300 text-xs">ソース: ${item.siteSource || '当サイト'} | 日付: ${item.date} | タグ: ${item.tags.join(' ')}</div>
                 ${item.comment ? `<div class="text-gray-200 bg-white/10 px-3 py-1 rounded text-xs mt-1">コメント: ${item.comment}</div>` : ''}
             `;
             lightbox.classList.remove('hidden');
