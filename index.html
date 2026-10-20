@@ -84,7 +84,7 @@
                 const localImages = await response.json();
                 
                 // 自サイトの画像ソースを識別用に付与
-                allImages = localImages.map(item => ({ ...item, siteSource: '本站' }));
+                allImages = localImages.map(item => ({ ...item, siteSource: '当サイト' }));
 
                 // 2. 隣接サイトデータの読み込みを試行（非同期並行読み込み、お互いに影響なし）
                 try {
