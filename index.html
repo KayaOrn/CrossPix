@@ -189,7 +189,7 @@
 
                 const tagsHtml = item.tags.map(t => `<span class="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded">${t}</span>`).join('');
                 const commentHtml = item.comment ? `<p class="text-xs text-gray-500 mt-1.5 truncate">${item.comment}</p>` : '';
-                const sourceBadge = item.siteSource && item.siteSource !== '本站' ? `<span class="text-[10px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded border border-amber-200">${item.siteSource}</span>` : '';
+                const sourceBadge = item.siteSource && item.siteSource !== '当サイト' ? `<span class="text-[10px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded border border-amber-200">${item.siteSource}</span>` : '';
 
                 card.innerHTML = `
                     <div class="overflow-hidden bg-gray-100 relative">
