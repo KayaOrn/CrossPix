@@ -1,8 +1,8 @@
 [
   {
     "filename": "20260930_かや_シーサイドフェス.みどり_nocomment.jpg",
-    "url": "/images/20260930_かや_シーサイドフェス.みどり_nocomment.jpg",
-    "thumbnail_url": "/thumbnails/thumb_20260930_かや_シーサイドフェス.みどり_nocomment.jpg",
+    "url": "https://apr-frica.kayaorn.com/images/20260930_かや_シーサイドフェス.みどり_nocomment.jpg",
+    "thumbnail_url": "https://apr-frica.kayaorn.com/thumbnails/thumb_20260930_かや_シーサイドフェス.みどり_nocomment.jpg",
     "date": "20260930",
     "people": [
       "かや"
@@ -20,8 +20,8 @@
   },
   {
     "filename": "20260930_かや_シーサイドフェス.きいろ_nocomment.jpg",
-    "url": "/images/20260930_かや_シーサイドフェス.きいろ_nocomment.jpg",
-    "thumbnail_url": "/thumbnails/thumb_20260930_かや_シーサイドフェス.きいろ_nocomment.jpg",
+    "url": "https://apr-frica.kayaorn.com/images/20260930_かや_シーサイドフェス.きいろ_nocomment.jpg",
+    "thumbnail_url": "https://apr-frica.kayaorn.com/thumbnails/thumb_20260930_かや_シーサイドフェス.きいろ_nocomment.jpg",
     "date": "20260930",
     "people": [
       "かや"
@@ -39,8 +39,8 @@
   },
   {
     "filename": "20260930_かや_シーサイドフェス.あか_nocomment.jpg",
-    "url": "/images/20260930_かや_シーサイドフェス.あか_nocomment.jpg",
-    "thumbnail_url": "/thumbnails/thumb_20260930_かや_シーサイドフェス.あか_nocomment.jpg",
+    "url": "https://apr-frica.kayaorn.com/images/20260930_かや_シーサイドフェス.あか_nocomment.jpg",
+    "thumbnail_url": "https://apr-frica.kayaorn.com/thumbnails/thumb_20260930_かや_シーサイドフェス.あか_nocomment.jpg",
     "date": "20260930",
     "people": [
       "かや"
@@ -58,8 +58,8 @@
   },
   {
     "filename": "20260930_SaY0_シーサイドフェス.ピンク_nocomment.jpg",
-    "url": "/images/20260930_SaY0_シーサイドフェス.ピンク_nocomment.jpg",
-    "thumbnail_url": "/thumbnails/thumb_20260930_SaY0_シーサイドフェス.ピンク_nocomment.jpg",
+    "url": "https://apr-frica.kayaorn.com/images/20260930_SaY0_シーサイドフェス.ピンク_nocomment.jpg",
+    "thumbnail_url": "https://apr-frica.kayaorn.com/thumbnails/thumb_20260930_SaY0_シーサイドフェス.ピンク_nocomment.jpg",
     "date": "20260930",
     "people": [
       "SaY0"
@@ -77,8 +77,8 @@
   },
   {
     "filename": "20260930_SaY0_シーサイドフェス.むらさき_nocomment.jpg",
-    "url": "/images/20260930_SaY0_シーサイドフェス.むらさき_nocomment.jpg",
-    "thumbnail_url": "/thumbnails/thumb_20260930_SaY0_シーサイドフェス.むらさき_nocomment.jpg",
+    "url": "https://apr-frica.kayaorn.com/images/20260930_SaY0_シーサイドフェス.むらさき_nocomment.jpg",
+    "thumbnail_url": "https://apr-frica.kayaorn.com/thumbnails/thumb_20260930_SaY0_シーサイドフェス.むらさき_nocomment.jpg",
     "date": "20260930",
     "people": [
       "SaY0"
@@ -96,8 +96,8 @@
   },
   {
     "filename": "20260930_SaY0_シーサイドフェス.あお_nocomment.jpg",
-    "url": "/images/20260930_SaY0_シーサイドフェス.あお_nocomment.jpg",
-    "thumbnail_url": "/thumbnails/thumb_20260930_SaY0_シーサイドフェス.あお_nocomment.jpg",
+    "url": "https://apr-frica.kayaorn.com/images/20260930_SaY0_シーサイドフェス.あお_nocomment.jpg",
+    "thumbnail_url": "https://apr-frica.kayaorn.com/thumbnails/thumb_20260930_SaY0_シーサイドフェス.あお_nocomment.jpg",
     "date": "20260930",
     "people": [
       "SaY0"
@@ -110,6 +110,25 @@
       "#SaY0",
       "#シーサイドフェス",
       "#あお"
+    ],
+    "comment": ""
+  },
+  {
+    "filename": "20260914_かや_ゴシックレアオレンジ.オレンジ_nocomment.jpg",
+    "url": "https://apr-frica.kayaorn.com/images/20260914_かや_ゴシックレアオレンジ.オレンジ_nocomment.jpg",
+    "thumbnail_url": "https://apr-frica.kayaorn.com/thumbnails/thumb_20260914_かや_ゴシックレアオレンジ.オレンジ_nocomment.jpg",
+    "date": "20260914",
+    "people": [
+      "かや"
+    ],
+    "custom_tags": [
+      "ゴシックレアオレンジ",
+      "オレンジ"
+    ],
+    "tags": [
+      "#かや",
+      "#ゴシックレアオレンジ",
+      "#オレンジ"
     ],
     "comment": ""
   }
