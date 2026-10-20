@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrossPix Photo Wall</title>
+    <!-- Tailwind CSS の読み込み -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- ヘッダータイトル -->
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold mb-2">📸 CrossPix Photo Wall</h1>
+            <p class="text-gray-500 text-sm">GitHub Actions と静的ホスティングによる自動生成アルバム</p>
+        </header>
+
+        <!-- 検索およびタグフィルターパネル -->
+        <div class="bg-white rounded-xl shadow-sm p-4 md:p-6 mb-8">
+            <!-- テキスト検索ボックス -->
+            <div class="mb-4">
+                <input type="text" id="searchInput" placeholder="人物、タグ、ファイル名、またはコメントで検索..." 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+            </div>
+            <!-- タグクラウド -->
+            <div>
+                <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">タグフィルター（クリックして切り替え）：</div>
+                <div id="tagContainer" class="flex flex-wrap gap-2">
+                    <!-- タグを動的に挿入 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ウォーターフォール型ギャラリーグリッド（スマホは3列固定、PCは大画面で拡大） -->
+        <div id="gallery" class="columns-3 md:columns-4 lg:columns-5 gap-2 md:gap-4 space-y-2 md:space-y-4">
+            <!-- 画像カードを動的に挿入 -->
+        </div>
+
+        <!-- 空状態（データなし）のメッセージ -->
+        <div id="emptyState" class="hidden text-center py-20 text-gray-400">
+            条件に一致する画像が見つかりませんでした ✨
+        </div>
+    </div>
+
+    <!-- 高解像度画像プレビューモーダル (ライトボックス) -->
+    <div id="lightbox" class="fixed inset-0 bg-black/85 z-50 hidden flex items-center justify-center p-4">
+        <div class="relative max-w-5xl max-h-[90vh] flex flex-col items-center">
+            <button onclick="closeLightbox()" class="absolute -top-10 right-0 text-white text-3xl font-bold hover:text-gray-300">&times;</button>
+            <img id="lightboxImg" src="" alt="Full Image" class="max-h-[72vh] object-contain rounded-lg shadow-2xl mb-4">
+            <div id="lightboxInfo" class="text-white text-center text-sm space-y-2">
+                <!-- 画像の詳細情報を動的に挿入 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- フロントエンドのコアロジックスクリプト -->
+    <script>
+        let allImages = [];
+        let selectedTags = new Set();
+
+        // タイムアウト機能付き fetch 関数（デフォルト 3 秒タイムアウト）
+        async function fetchWithTimeout(url, timeout = 3000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            try {
+                const response = await fetch(url, { signal: controller.signal });
+                clearTimeout(id);
+                if (!response.ok) throw new Error('Network response was not ok');
+                return await response.json();
+            } catch (error) {
+                clearTimeout(id);
+                console.warn(`[タイムアウトまたは取得失敗] 隣接サイトのデータ取得に失敗しました: ${url}`, error);
+                return []; // タイムアウトや失敗時は空配列を返し、メイン処理をブロックしない
+            }
+        }
+
+        // ページ読み込み時に自サイトおよび隣接サイトのデータを取得
+        async function initGallery() {
+            try {
+                // 1. 自サイトの data.json を優先的に読み込み
+                const response = await fetch('data.json');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const localImages = await response.json();
+                
+                // 自サイトの画像ソースを識別用に付与
+                allImages = localImages.map(item => ({ ...item, siteSource: '本站' }));
+
+                // 2. 隣接サイトデータの読み込みを試行（非同期並行読み込み、お互いに影響なし）
+                try {
+                    const neighborRes = await fetch('neighbors.json');
+                    if (neighborRes.ok) {
+                        const neighbors = await neighborRes.json();
+                        
+                        // すべての隣接サイトを並行リクエストし、それぞれ最大 3000ms (3秒) 待機
+                        const neighborPromises = neighbors.map(async neighbor => {
+                            const neighborData = await fetchWithTimeout(neighbor.url, 3000);
+                            return neighborData.map(item => ({
+                                ...item,
+                                siteSource: neighbor.name // どの隣接サイトからのデータか記録
+                            }));
+                        });
+
+                        const neighborResults = await Promise.all(neighborPromises);
+                        neighborResults.forEach(images => {
+                            allImages = allImages.concat(images);
+                        });
+                    }
+                } catch (e) {
+                    console.log('neighbors.json が見つからないか、隣接サイトの設定がありません。');
+                }
+
+                // タグとギャラリーをレンダリング
+                renderTags();
+                renderGallery(allImages);
+            } catch (error) {
+                console.error('data.json の読み込みに失敗しました:', error);
+                document.getElementById('gallery').innerHTML = '<div class="col-span-full text-center text-red-500 py-10">data.json の読み込みに失敗しました。ビルド状態を確認してください。</div>';
+            }
+        }
+
+        // 利用可能なすべてのタグをレンダリング
+        function renderTags() {
+            const tagSet = new Set();
+            allImages.forEach(item => {
+                item.tags.forEach(t => tagSet.add(t));
+            });
+
+            const tagContainer = document.getElementById('tagContainer');
+            tagContainer.innerHTML = '';
+
+            tagSet.forEach(tag => {
+                const btn = document.createElement('button');
+                btn.className = 'px-3 py-1 text-xs rounded-full border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition';
+                btn.textContent = tag;
+                btn.onclick = () => toggleTag(tag, btn);
+                tagContainer.appendChild(btn);
+            });
+        }
+
+        // タグの選択状態を切り替え
+        function toggleTag(tag, btn) {
+            if (selectedTags.has(tag)) {
+                selectedTags.delete(tag);
+                btn.className = 'px-3 py-1 text-xs rounded-full border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition';
+            } else {
+                selectedTags.add(tag);
+                btn.className = 'px-3 py-1 text-xs rounded-full border-blue-500 bg-blue-500 text-white transition shadow-sm';
+            }
+            filterImages();
+        }
+
+        // 画像をフィルタリング
+        function filterImages() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase().trim();
+
+            const filtered = allImages.filter(item => {
+                const matchKeyword = !keyword || 
+                    item.filename.toLowerCase().includes(keyword) ||
+                    item.comment.toLowerCase().includes(keyword) ||
+                    item.people.some(p => p.toLowerCase().includes(keyword)) ||
+                    item.custom_tags.some(t => t.toLowerCase().includes(keyword));
+
+                const matchTags = Array.from(selectedTags).every(tag => item.tags.includes(tag));
+
+                return matchKeyword && matchTags;
+            });
+
+            renderGallery(filtered);
+        }
+
+        // ギャラリーリストをレンダリング
+        function renderGallery(items) {
+            const gallery = document.getElementById('gallery');
+            const emptyState = document.getElementById('emptyState');
+            gallery.innerHTML = '';
+
+            if (items.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            items.forEach((item) => {
+                const card = document.createElement('div');
+                card.className = 'break-inside-avoid bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer group';
+                card.onclick = () => openLightbox(item);
+
+                const tagsHtml = item.tags.map(t => `<span class="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded">${t}</span>`).join('');
+                const commentHtml = item.comment ? `<p class="text-xs text-gray-500 mt-1.5 truncate">${item.comment}</p>` : '';
+                const sourceBadge = item.siteSource && item.siteSource !== '本站' ? `<span class="text-[10px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded border border-amber-200">${item.siteSource}</span>` : '';
+
+                card.innerHTML = `
+                    <div class="overflow-hidden bg-gray-100 relative">
+                        <img src="${item.thumbnail_url}" loading="lazy" class="w-full object-cover group-hover:scale-105 transition duration-300">
+                    </div>
+                    <div class="p-3">
+                        <div class="flex justify-between items-center text-[11px] text-gray-400 mb-1.5">
+                            <span>📅 ${item.date}</span>
+                            ${sourceBadge}
+                        </div>
+                        <div class="flex flex-wrap gap-1 mb-1">
+                            ${tagsHtml}
+                        </div>
+                        ${commentHtml}
+                    </div>
+                `;
+                gallery.appendChild(card);
+            });
+        }
+
+        // モーダル（ライトボックス）を開く
+        function openLightbox(item) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            const info = document.getElementById('lightboxInfo');
+
+            img.src = item.url;
+            info.innerHTML = `
+                <div class="font-semibold text-base">${item.filename}</div>
+                <div class="text-gray-300 text-xs">ソース: ${item.siteSource || '本站'} | 日付: ${item.date} | タグ: ${item.tags.join(' ')}</div>
+                ${item.comment ? `<div class="text-gray-200 bg-white/10 px-3 py-1 rounded text-xs mt-1">コメント: ${item.comment}</div>` : ''}
+            `;
+            lightbox.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // モーダルを閉じる
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 検索ボックスの入力を監視
+        document.getElementById('searchInput').addEventListener('input', filterImages);
+
+        // モーダルの背景をクリックして閉じる
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target.id === 'lightbox') closeLightbox();
+        });
+
+        // ESC キーの入力を監視して閉じる
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // 初期化
+        initGallery();
+    </script>
+</body>
+</html>
