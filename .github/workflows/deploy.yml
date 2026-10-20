@@ -2,7 +2,7 @@ name: Build and Deploy CrossPix Photo Wall
 
 on:
   push:
-    branches: [ "main" ] 
+    branches: [ "kaya-frica-web" ] 
   workflow_dispatch: 
 
 permissions:
