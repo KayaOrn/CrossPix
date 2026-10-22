@@ -12,8 +12,8 @@
       "type": "image/jpeg"
     },
     {
-      "src": "images/default-icon-500.jpg",
-      "sizes": "500x500",
+      "src": "images/default-icon-512.jpg",
+      "sizes": "512x512",
       "type": "image/jpeg"
     }
   ]
