@@ -6,6 +6,22 @@
     <title>かや＆SaY0 のフレカアルバム 💫</title>
     <!-- Tailwind CSS の読み込み -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Optimized for iOS "Add to Home Screen"-->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CrossPix">
+    <link rel="apple-touch-icon" href="images/default-icon-192.jpg">
+
+    <!-- アクセントカラー -->
+    <meta name="theme-color" content="#fff8c4">
+
+    <!-- WebPage ICON -->
+    <link rel="icon" type="image/jpeg" href="images/default-icon-192.jpg">
+  
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-CJB8Z0TV52"></script>
     <script>
@@ -15,6 +31,7 @@
     
       gtag('config', 'G-CJB8Z0TV52');
     </script>
+
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen">
 
@@ -259,6 +276,15 @@
 
         // 初期化
         initGallery();
+
+        //サービス登録
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker Success', reg))
+                .catch(err => console.log('Service Worker Failed', err));
+    });
+}
     </script>
 </body>
 </html>
