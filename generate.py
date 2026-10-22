@@ -7,7 +7,7 @@ from PIL import Image
 # ==================== 設定項目 ====================
 # ご自身の GitHub Pages の絶対 URL に書き換えてください
 # 例： "https://example.com"
-SITE_URL = ""
+SITE_URL = "https://apr-frica.kayaorn.com"
 
 IMAGE_DIR = "images"       # 元画像の保存ディレクトリ
 THUMB_DIR = "thumbnails"   # サムネイルの保存ディレクトリ
