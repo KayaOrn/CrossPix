@@ -54,7 +54,7 @@
             </div>
 
         <!-- ウォーターフォール型ギャラリーグリッド（スマホは3列固定、PCは大画面で拡大） -->
-        <div id="gallery" class="columns-3 md:columns-4 lg:columns-5 gap-2 md:gap-4 space-y-2 md:space-y-4">
+        <div id="gallery" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-4">
             <!-- 画像カードを動的に挿入 -->
         </div>
 
@@ -230,8 +230,8 @@
                 const sourceBadge = item.siteSource && item.siteSource !== '当サイト' ? `<span class="text-[10px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded border border-amber-200">${item.siteSource}</span>` : '';
 
                 card.innerHTML = `
-                    <div class="overflow-hidden bg-gray-100 relative">
-                        <img src="${item.thumbnail_url}" loading="lazy" class="w-full object-cover group-hover:scale-105 transition duration-300">
+                        <div class="overflow-hidden bg-gray-100 relative h-36 md:h-48">
+                        <img src="${item.thumbnail_url}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                     </div>
                     <div class="p-3">
                         <div class="flex justify-between items-center text-[11px] text-gray-400 mb-1.5">
