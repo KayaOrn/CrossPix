@@ -39,17 +39,22 @@
                 <input type="text" id="searchInput" placeholder="人物、タグ、ファイル名、またはコメントで検索..." 
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
             </div>
-            <!-- タグクラウド -->
+        <!-- タグクラウド -->
             <div>
-                <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">タグフィルター（クリックして切り替え）：</div>
-                <div id="tagContainer" class="flex flex-wrap gap-2">
-                    <!-- タグを動的に挿入 -->
+                <div class="flex justify-between items-center mb-2">
+                    <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider">タグフィルター（クリックして切り替え）：</div>
+                    <button onclick="toggleTagSection()" id="tagToggleBtn" class="text-xs text-blue-600 hover:text-blue-800 font-medium focus:outline-none">展開する ▼</button>
+                </div>
+                <!-- デフォルトは折りたたみ -->
+                <div id="tagContainerWrapper" class="transition-all duration-300">
+                    <div id="tagContainer" class="flex flex-wrap gap-2 max-h-36 overflow-y-auto pr-1 hidden">
+                        <!-- タグを動的に挿入 -->
+                    </div>
                 </div>
             </div>
-        </div>
 
         <!-- ウォーターフォール型ギャラリーグリッド（スマホは3列固定、PCは大画面で拡大） -->
-        <div id="gallery" class="columns-3 md:columns-4 lg:columns-5 gap-2 md:gap-4 space-y-2 md:space-y-4">
+        <div id="gallery" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-4">
             <!-- 画像カードを動的に挿入 -->
         </div>
 
@@ -154,6 +159,23 @@
             });
         }
 
+        // タブバーの折りたたみ／展開状態（デフォルトは折りたたみ）
+        let isTagExpanded = false;
+
+        function toggleTagSection() {
+            const container = document.getElementById('tagContainer');
+            const btn = document.getElementById('tagToggleBtn');
+            
+            isTagExpanded = !isTagExpanded;
+            
+            if (isTagExpanded) {
+                container.classList.remove('hidden');
+                btn.textContent = '折りたたむ ▲';
+            } else {
+                container.classList.add('hidden');
+                btn.textContent = '展開する ▼';
+            }
+        }
         // タグの選択状態を切り替え
         function toggleTag(tag, btn) {
             if (selectedTags.has(tag)) {
@@ -208,8 +230,8 @@
                 const sourceBadge = item.siteSource && item.siteSource !== '当サイト' ? `<span class="text-[10px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded border border-amber-200">${item.siteSource}</span>` : '';
 
                 card.innerHTML = `
-                    <div class="overflow-hidden bg-gray-100 relative">
-                        <img src="${item.thumbnail_url}" loading="lazy" class="w-full object-cover group-hover:scale-105 transition duration-300">
+                        <div class="overflow-hidden bg-gray-100 relative h-36 md:h-48">
+                        <img src="${item.thumbnail_url}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                     </div>
                     <div class="p-3">
                         <div class="flex justify-between items-center text-[11px] text-gray-400 mb-1.5">
