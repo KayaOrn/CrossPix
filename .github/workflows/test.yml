@@ -1,0 +1,44 @@
+name: CrossPix Develop Test
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop", "main" ]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow
+
+      - name: 1. Validate JSON Config Files (Manifest & Neighbors)
+        run: |
+          python -m json.tool manifest.json > /dev/null
+          if [ -f neighbors.json ]; then
+            python -m json.tool neighbors.json > /dev/null
+          fi
+          echo "✅ Configuration file JSON syntax is valid"
+
+      - name: 2. Run generate.py (Smoke Test & Build)
+        run: python generate.py
+
+      - name: 3. Validate Generated data.json
+        run: |
+          python -c "
+          import json
+          with open('data.json', 'r', encoding='utf-8') as f:
+              data = json.load(f)
+          print(f'✅ data.json parsed successfully; it contains a total of {len(data)} image entries.')
+          "
