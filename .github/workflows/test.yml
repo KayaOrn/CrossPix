@@ -33,8 +33,15 @@ jobs:
 
       - name: 2. Run generate.py (Smoke Test & Build)
         run: python generate.py
+        
+      - name: 3. Test Service Worker Version Replacement
+        run: |
+          # Dynamic replacement of the `sw.js` version number to simulate a production environment
+          BUILD_VERSION=$(date +%s)
+          sed -i "s/__VERSION__/$BUILD_VERSION/g" sw.js
+          echo "✅ Service Worker version will been automatically updated to v$BUILD_VERSION"
 
-      - name: 3. Validate Generated data.json
+      - name: 4. Validate Generated data.json
         run: |
           python -c "
           import json
