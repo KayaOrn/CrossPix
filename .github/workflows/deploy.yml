@@ -35,34 +35,16 @@ jobs:
       - name: Run generate.py
         run: python generate.py
         
-#      - name: Auto update Service Worker version
-#        run: |
-#          # Generate a unique version number based on a timestamp
-#          BUILD_VERSION=$(date +%s)
-#          
-#          # replace `__VERSION__` in `sw.js` with timestamp
-#          sed -i "s/__VERSION__/$BUILD_VERSION/g" sw.js
-#          
-#          echo "✅ Service Worker version has been automatically updated to v$BUILD_VERSION"
-
-      - name: Debug and Update Service Worker version
-        run: |
-          echo "1. ls -la"
-          ls -la
-          
-          echo "2. cat sw.js"
-          cat sw.js
-          
+      - name: Update Service Worker version
+        run: |          
           # sed
           BUILD_VERSION=$(date +%s)
-          echo "生成的版本号: $BUILD_VERSION"
+          echo " Generate a unique version number based on a timestamp $BUILD_VERSION"
           sed -i "s/__VERSION__/$BUILD_VERSION/g" sw.js
-          
-          echo "3. cat sw.js"
-          cat sw.js
-          
-          echo "4. git diff"
+
+          echo "Check build version (git diff)："
           git diff sw.js
+          echo "✅ Service Worker version has been automatically updated to v$BUILD_VERSION"
 
       - name: Auto-commit generated data.json and thumbnails back to repo
         uses: stefanzweifel/git-auto-commit-action@v5
