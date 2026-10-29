@@ -24,7 +24,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.14'
           cache: 'pip'
 
       - name: Install dependencies
@@ -35,21 +35,22 @@ jobs:
       - name: Run generate.py
         run: python generate.py
         
-      - name: Auto update Service Worker version
-        run: |
-          # Generate a unique version number based on a timestamp
+      - name: Update Service Worker version
+        run: |          
+          # sed
           BUILD_VERSION=$(date +%s)
-          
-          # replace `__VERSION__` in `sw.js` with timestamp
+          echo " Generate a unique version number based on a timestamp $BUILD_VERSION"
           sed -i "s/__VERSION__/$BUILD_VERSION/g" sw.js
-          
+
+          echo "Check build version (git diff)："
+          git diff sw.js
           echo "✅ Service Worker version has been automatically updated to v$BUILD_VERSION"
-        
-      - name: Auto-commit generated data.json and thumbnails back to repo
+
+      - name: Auto-commit generated data.json, thumbnails and sw.js back to repo
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🤖 Auto-generate thumbnails and data.json via GitHub Actions"
-          file_pattern: "data.json thumbnails/"
+          commit_message: "🤖 Auto-generate thumbnails, data.json and update sw.js version via GitHub Actions"
+          file_pattern: "data.json thumbnails/ sw.js"
       
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
