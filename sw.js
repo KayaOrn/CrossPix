@@ -1,13 +1,30 @@
-// sw.js EasyCache
+// sw.js Automatic cache version
+const CACHE_NAME = 'crosspix-v__VERSION__';
+
 self.addEventListener('install', (e) => {
     e.waitUntil(
-        caches.open('crosspix-v1').then((cache) => {
+        caches.open(CACHE_NAME).then((cache) => {
             return cache.addAll([
                 './',
                 './index.html',
                 './data.json',
                 './neighbors.json'
             ]);
+        })
+    );
+});
+
+// Cache Cleanup
+self.addEventListener('activate', (e) => {
+    e.waitUntil(
+        caches.keys().then((keys) => {
+            return Promise.all(
+                keys.map((key) => {
+                    if (key !== CACHE_NAME) {
+                        return caches.delete(key);
+                    }
+                })
+            );
         })
     );
 });
