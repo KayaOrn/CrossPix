@@ -46,11 +46,11 @@ jobs:
           git diff sw.js
           echo "✅ Service Worker version has been automatically updated to v$BUILD_VERSION"
 
-      - name: Auto-commit generated data.json and thumbnails back to repo
+      - name: Auto-commit generated data.json, thumbnails and sw.js back to repo
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🤖 Auto-generate thumbnails and data.json via GitHub Actions"
-          file_pattern: "data.json thumbnails/"
+          commit_message: "🤖 Auto-generate thumbnails, data.json and update sw.js version via GitHub Actions"
+          file_pattern: "data.json thumbnails/ sw.js"
       
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
