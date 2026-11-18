@@ -33,7 +33,7 @@ jobs:
 
       - name: 2. Run generate.py (Smoke Test & Build)
         run: python generate.py
-      
+        
       - name: 3. Test Service Worker Version Replacement
         run: |
           # Dynamic replacement of the `sw.js` version number to simulate a production environment

@@ -1,8 +1,8 @@
 name: Build and Deploy CrossPix Photo Wall
 
 on:
-#  push:
-#    branches: [ "kaya-frica-web" ] 
+  push:
+    branches: [ "kaya-frica-web" ] 
   workflow_dispatch: 
 
 permissions:
@@ -36,11 +36,11 @@ jobs:
         run: python generate.py
         
       - name: Update Service Worker version
-        run: |          
-          # sed
+        run: |
           BUILD_VERSION=$(date +%s)
           echo " Generate a unique version number based on a timestamp $BUILD_VERSION"
           sed -i -E "s/crosspix-v(__VERSION__|[0-9]+)/crosspix-v$BUILD_VERSION/g" sw.js
+
 
           echo "Check build version (git diff)："
           git diff sw.js
