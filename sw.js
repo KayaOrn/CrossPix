@@ -1,5 +1,5 @@
 // sw.js Automatic cache version
-const CACHE_NAME = 'crosspix-v1793298754';
+const CACHE_NAME = 'crosspix-v1795016559';
 
 self.addEventListener('install', (e) => {
     e.waitUntil(
